@@ -7,7 +7,7 @@ import { defineConfig } from 'eslint/config';
 
 export default defineConfig(
   {
-    ignores: ['dist/', '.vercel/', '.astro/', 'node_modules/', 'brand/', 'public/', 'src/scenes/'],
+    ignores: ['dist/', '.vercel/', '.astro/', 'node_modules/', 'brand/', 'public/'],
   },
   js.configs.recommended,
   ...tseslint.configs.recommended,
