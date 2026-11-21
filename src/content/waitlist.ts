@@ -35,6 +35,8 @@ export interface WaitlistCopy {
     points: string[];
     invalid: string;
     error: string;
+    /** Shown only when PUBLIC_DOWNLOAD_URL is set (Windows beta installer). */
+    beta: { title: string; body: string; cta: string; note: string };
   };
   confirmed: { title: string; body: string; streamer: string; clipper: string };
   email: { subject: string; heading: string; body: string; button: string; ignore: string };
@@ -90,6 +92,12 @@ export const waitlistCopy: Record<Locale, WaitlistCopy> = {
       invalid:
         'That confirmation link expired or isn’t valid. Join again and we’ll send a new one.',
       error: 'We couldn’t confirm your spot right now. Try the link again in a few minutes.',
+      beta: {
+        title: 'Try the Windows beta now',
+        body: 'Don’t want to wait? Install the beta on your PC: it finds the best moments in your stream and cuts them vertical with captions. Everything runs on your computer.',
+        cta: 'Download for Windows',
+        note: 'Windows 10 or 11, 64-bit. Free during the beta. Windows may warn about an unknown publisher: click “More info”, then “Run anyway”.',
+      },
     },
     confirmed: {
       title: 'You’re on the list.',
@@ -155,6 +163,12 @@ export const waitlistCopy: Record<Locale, WaitlistCopy> = {
       invalid:
         'Esse link de confirmação expirou ou não é válido. Entra na lista de novo que a gente manda outro.',
       error: 'Não deu pra confirmar seu lugar agora. Tenta o link de novo em alguns minutos.',
+      beta: {
+        title: 'Testa o beta no Windows agora',
+        body: 'Não quer esperar? Instala o beta no seu PC: ele acha os melhores momentos da live e corta na vertical, com legenda. Tudo roda no seu computador.',
+        cta: 'Baixar para Windows',
+        note: 'Windows 10 ou 11, 64 bits. Grátis durante o beta. O Windows pode avisar que o editor é desconhecido: clica em “Mais informações” e depois em “Executar assim mesmo”.',
+      },
     },
     confirmed: {
       title: 'Pronto, seu lugar está guardado.',
@@ -221,6 +235,12 @@ export const waitlistCopy: Record<Locale, WaitlistCopy> = {
       invalid:
         'Ese enlace de confirmación venció o no es válido. Vuelve a anotarte y te enviamos otro.',
       error: 'No pudimos confirmar tu lugar ahora. Prueba el enlace de nuevo en unos minutos.',
+      beta: {
+        title: 'Prueba la beta para Windows ahora',
+        body: '¿No quieres esperar? Instala la beta en tu PC: encuentra los mejores momentos de tu stream y los corta en vertical, con subtítulos. Todo se ejecuta en tu computadora.',
+        cta: 'Descargar para Windows',
+        note: 'Windows 10 u 11, 64 bits. Gratis durante la beta. Windows puede avisar que el editor es desconocido: haz clic en “Más información” y luego en “Ejecutar de todas formas”.',
+      },
     },
     confirmed: {
       title: 'Listo, tu lugar está guardado.',
