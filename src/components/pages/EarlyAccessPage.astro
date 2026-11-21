@@ -6,6 +6,7 @@
  */
 import WaitlistForm from '@/components/waitlist/WaitlistForm.astro';
 import type { Locale } from '@/config/routes';
+import { site } from '@/config/site';
 import { waitlistCopy } from '@/content/waitlist';
 
 interface Props {
@@ -40,6 +41,21 @@ const w = waitlistCopy[locale];
     <div class="rounded-cr-dialog border border-cr-rule bg-cr-surface p-5 md:p-8">
       <WaitlistForm locale={locale} id="ea" />
     </div>
+    {site.downloadUrl && (
+      <aside
+        class="ea-beta mt-6 rounded-cr-dialog border border-cr-rule p-5 md:p-8"
+        aria-labelledby="ea-beta-title"
+      >
+        <h2 id="ea-beta-title" class="text-xl font-semibold">
+          {w.page.beta.title}
+        </h2>
+        <p class="mt-2 text-cr-muted">{w.page.beta.body}</p>
+        <a class="cr-btn mt-5 inline-flex" href={site.downloadUrl} rel="noopener">
+          {w.page.beta.cta}
+        </a>
+        <p class="mt-3 text-sm text-cr-muted">{w.page.beta.note}</p>
+      </aside>
+    )}
   </div>
 </section>
 

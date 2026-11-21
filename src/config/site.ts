@@ -9,6 +9,8 @@ export const site = {
   appUrl: env.PUBLIC_APP_URL || 'https://app.rushclippy.com',
   /** false = CTAs go to the waitlist; true = CTAs go to the app. */
   appLive: env.PUBLIC_APP_LIVE === 'true',
+  /** Windows beta installer (public GitHub release). Empty = the beta block is not rendered. */
+  downloadUrl: env.PUBLIC_DOWNLOAD_URL || '',
   plausibleDomain: env.PUBLIC_PLAUSIBLE_DOMAIN || '',
   /** Only a production deploy on Vercel may be indexed. */
   indexable: process.env.VERCEL_ENV === 'production',
