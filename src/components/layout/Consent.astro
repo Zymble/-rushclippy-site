@@ -1,0 +1,315 @@
+---
+/**
+ * Cookie consent (LGPD / GDPR). Essential cookies only until the visitor opts in.
+ * - Google Analytics 4 loads only after "analytics" consent (Consent Mode v2 defaults to denied in
+ *   ConsentDefaults, in <head>).
+ * - With consent, a first-party cookie `cr_src` records where the visit came from (UTM, referrer,
+ *   landing page). The waitlist form sends it so we know where each signup came from.
+ * - The choice lives in the `cr_consent` cookie (essential, 12 months). Footer "Cookie preferences"
+ *   reopens the dialog.
+ */
+import { localizedPath, type Locale } from '@/config/routes';
+import { site } from '@/config/site';
+import { consentCopy } from '@/content/consent';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const c = consentCopy[locale];
+---
+
+<section
+  id="cr-consent"
+  class="cc-banner"
+  role="region"
+  aria-labelledby="cc-title"
+  data-ga-id={site.gaId}
+  hidden
+>
+  <div class="container-cr cc-inner">
+    <div class="cc-text">
+      <h2 id="cc-title" class="text-base font-semibold">
+        {c.banner.title}
+      </h2>
+      <p class="mt-1 text-sm text-cr-muted">
+        {c.banner.body}{' '}
+        <a href={localizedPath('legal/cookies', locale)} class="text-cr-text underline">
+          {c.banner.policy}
+        </a>
+      </p>
+    </div>
+    <div class="cc-actions">
+      <button type="button" class="cr-btn secondary" data-cc="customize">
+        {c.banner.customize}
+      </button>
+      <button type="button" class="cr-btn secondary" data-cc="reject">
+        {c.banner.reject}
+      </button>
+      <button type="button" class="cr-btn" data-cc="accept">
+        {c.banner.accept}
+      </button>
+    </div>
+  </div>
+</section>
+
+<dialog id="cr-consent-dialog" class="cr-dialog cc-dialog" aria-labelledby="cc-dialog-title">
+  <form method="dialog" class="flex flex-col gap-5">
+    <div class="relative pr-10">
+      <button type="submit" class="cc-close" aria-label={c.dialog.close}>
+        ×
+      </button>
+      <h2 id="cc-dialog-title" class="text-xl font-semibold">
+        {c.dialog.title}
+      </h2>
+      <p class="mt-2 text-sm text-cr-muted">{c.dialog.body}</p>
+    </div>
+    <div class="cc-row">
+      <div>
+        <p class="font-semibold">{c.dialog.necessary.name}</p>
+        <p class="mt-1 text-sm text-cr-muted">{c.dialog.necessary.desc}</p>
+      </div>
+      <span class="text-sm font-semibold text-cr-muted whitespace-nowrap">
+        {c.dialog.necessary.always}
+      </span>
+    </div>
+    <div class="cc-row">
+      <div>
+        <label for="cc-analytics" class="font-semibold">
+          {c.dialog.analytics.name}
+        </label>
+        <p id="cc-analytics-desc" class="mt-1 text-sm text-cr-muted">
+          {c.dialog.analytics.desc}
+        </p>
+      </div>
+      <input
+        id="cc-analytics"
+        type="checkbox"
+        class="cc-switch"
+        role="switch"
+        aria-describedby="cc-analytics-desc"
+      />
+    </div>
+    <div class="flex flex-wrap justify-end gap-3">
+      <button type="button" class="cr-btn secondary" data-cc="save">
+        {c.dialog.save}
+      </button>
+      <button type="button" class="cr-btn" data-cc="accept">
+        {c.dialog.acceptAll}
+      </button>
+    </div>
+  </form>
+</dialog>
+
+<p id="cr-consent-status" class="sr-only" role="status" data-saved={c.saved}></p>
+
+<script>
+  type Choice = { analytics: boolean };
+  const w = window as unknown as { gtag: (...args: unknown[]) => void; __crGaLoaded?: boolean };
+  const COOKIE = 'cr_consent';
+  const SRC = 'cr_src';
+  const YEAR = 60 * 60 * 24 * 365;
+
+  const banner = document.getElementById('cr-consent') as HTMLElement;
+  const dialog = document.getElementById('cr-consent-dialog') as HTMLDialogElement;
+  const toggle = document.getElementById('cc-analytics') as HTMLInputElement;
+  const status = document.getElementById('cr-consent-status') as HTMLElement;
+  const gaId = banner.dataset.gaId || '';
+
+  const readCookie = (name: string) =>
+    document.cookie
+      .split('; ')
+      .find((r) => r.startsWith(name + '='))
+      ?.slice(name.length + 1);
+  const writeCookie = (name: string, value: string, maxAge: number) => {
+    const secure = location.protocol === 'https:' ? '; Secure' : '';
+    document.cookie = `${name}=${value}; Max-Age=${maxAge}; Path=/; SameSite=Lax${secure}`;
+  };
+
+  function stored(): Choice | null {
+    const v = readCookie(COOKIE);
+    if (!v) return null;
+    return { analytics: v.includes('a1') };
+  }
+
+  // Where this visit came from: campaign tags first, then the referring site, else "direct".
+  function recordOrigin() {
+    if (readCookie(SRC)) return; // first touch wins
+    const q = new URLSearchParams(location.search);
+    let ref = '';
+    try {
+      const r = document.referrer ? new URL(document.referrer) : null;
+      if (r && r.hostname !== location.hostname) ref = r.hostname.replace(/^www\./, '');
+    } catch {
+      /* invalid referrer */
+    }
+    const parts = {
+      source: q.get('utm_source') || ref || 'direct',
+      medium: q.get('utm_medium') || (ref ? 'referral' : 'none'),
+      campaign: q.get('utm_campaign') || '',
+      landing: location.pathname,
+      date: new Date().toISOString().slice(0, 10),
+    };
+    const value = Object.entries(parts)
+      .filter(([, v]) => v)
+      .map(([k, v]) => `${k}=${String(v).slice(0, 60)}`)
+      .join(';');
+    writeCookie(SRC, encodeURIComponent(value), 60 * 60 * 24 * 90);
+  }
+
+  function loadAnalytics() {
+    if (!gaId || w.__crGaLoaded) return;
+    w.__crGaLoaded = true;
+    const s = document.createElement('script');
+    s.async = true;
+    s.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(gaId)}`;
+    document.head.appendChild(s);
+    const g = w.gtag;
+    g('js', new Date());
+    g('config', gaId, { anonymize_ip: true });
+  }
+
+  function clearAnalytics() {
+    const host = location.hostname;
+    for (const c of document.cookie.split('; ')) {
+      const name = c.split('=')[0] ?? '';
+      if (name === SRC || name === '_ga' || name.startsWith('_ga_')) {
+        for (const domain of [
+          '',
+          `; Domain=${host}`,
+          `; Domain=.${host.split('.').slice(-2).join('.')}`,
+        ]) {
+          document.cookie = `${name}=; Max-Age=0; Path=/${domain}`;
+        }
+      }
+    }
+  }
+
+  function apply(choice: Choice, announce = false) {
+    writeCookie(COOKIE, `v1.${choice.analytics ? 'a1' : 'a0'}`, YEAR);
+    w.gtag('consent', 'update', {
+      analytics_storage: choice.analytics ? 'granted' : 'denied',
+    });
+    if (choice.analytics) {
+      recordOrigin();
+      loadAnalytics();
+    } else {
+      clearAnalytics();
+    }
+    banner.hidden = true;
+    if (announce) status.textContent = status.dataset.saved || '';
+    document.dispatchEvent(new CustomEvent('cr:consent', { detail: choice }));
+  }
+
+  function openPrefs() {
+    toggle.checked = stored()?.analytics ?? false;
+    dialog.showModal();
+  }
+
+  document.addEventListener('click', (e) => {
+    const t = (e.target as HTMLElement).closest<HTMLElement>('[data-cc]');
+    if (!t) return;
+    const act = t.dataset.cc;
+    if (act === 'accept') {
+      apply({ analytics: true }, true);
+      if (dialog.open) dialog.close();
+    } else if (act === 'reject') {
+      apply({ analytics: false }, true);
+    } else if (act === 'customize' || act === 'open') {
+      openPrefs();
+    } else if (act === 'save') {
+      apply({ analytics: toggle.checked }, true);
+      dialog.close();
+    }
+  });
+
+  // Analytics events (only reach Google when the visitor accepted): any element with data-track="name".
+  document.addEventListener('click', (e) => {
+    const t = (e.target as HTMLElement).closest<HTMLElement>('[data-track]');
+    if (t && stored()?.analytics) w.gtag('event', t.dataset.track);
+  });
+
+  const choice = stored();
+  if (choice) {
+    if (choice.analytics) {
+      recordOrigin();
+      loadAnalytics();
+    }
+  } else {
+    banner.hidden = false;
+  }
+</script>
+
+<style>
+  .cc-banner {
+    position: fixed;
+    inset: auto 0 0 0;
+    z-index: 60;
+    background: var(--cr-surface);
+    border-top: 1px solid var(--cr-edge);
+    box-shadow: var(--cr-shadow-overlay);
+    padding-block: var(--cr-space-s16);
+  }
+  .cc-inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--cr-space-s16);
+  }
+  .cc-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--cr-space-s8);
+  }
+  .cc-actions .cr-btn {
+    white-space: nowrap;
+  }
+  @media (min-width: 1024px) {
+    .cc-inner {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .cc-text {
+      max-width: 62ch;
+    }
+    .cc-actions {
+      flex-wrap: nowrap;
+    }
+  }
+  .cc-close {
+    position: absolute;
+    top: -0.5rem;
+    right: -0.5rem;
+    width: 2.75rem;
+    height: 2.75rem;
+    font-size: 1.5rem;
+    line-height: 1;
+    color: var(--cr-muted);
+    background: none;
+    border: 0;
+    cursor: pointer;
+  }
+  .cc-close:hover {
+    color: var(--cr-text);
+  }
+  .cc-dialog {
+    margin: auto;
+    width: min(34rem, 94vw);
+  }
+  .cc-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--cr-space-s16);
+    padding-top: var(--cr-space-s16);
+    border-top: 1px solid var(--cr-rule);
+  }
+  .cc-switch {
+    flex: none;
+    width: 2.75rem;
+    height: 1.5rem;
+    margin-top: 0.125rem;
+    accent-color: var(--cr-action);
+    cursor: pointer;
+  }
+</style>

@@ -3,6 +3,7 @@ import '@/styles/global.css';
 import interUrl from '@/assets/fonts/InterVariable-latin.woff2?url';
 import Header from '@/components/layout/Header.astro';
 import Footer from '@/components/layout/Footer.astro';
+import Consent from '@/components/layout/Consent.astro';
 import SEO from '@/components/seo/SEO.astro';
 import { localeMeta, type Locale, type RouteId } from '@/config/routes';
 import { useTranslations } from '@/i18n/utils';
@@ -37,6 +38,23 @@ const { t } = useTranslations(locale);
         document.documentElement.dataset.theme = dark ? 'dark' : 'light';
       })();
     </script>
+    <!-- Google Consent Mode v2: everything denied until the visitor opts in (see Consent.astro). -->
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        // gtag.js needs the arguments object itself, not an array
+        // eslint-disable-next-line prefer-rest-params
+        window.dataLayer.push(arguments);
+      }
+      window.gtag = gtag;
+      gtag('consent', 'default', {
+        ad_storage: 'denied',
+        ad_user_data: 'denied',
+        ad_personalization: 'denied',
+        analytics_storage: 'denied',
+        wait_for_update: 500,
+      });
+    </script>
     <meta name="theme-color" content="#0B1220" />
     <link rel="preload" href={interUrl} as="font" type="font/woff2" crossorigin />
     <link rel="icon" href="/favicon.ico" sizes="32x32" />
@@ -65,5 +83,6 @@ const { t } = useTranslations(locale);
       <slot />
     </main>
     <Footer locale={locale} routeId={routeId} />
+    <Consent locale={locale} />
   </body>
 </html>

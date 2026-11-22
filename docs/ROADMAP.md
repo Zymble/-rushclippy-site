@@ -46,8 +46,8 @@ Cada fase = 1 branch + 1 PR + 1 link de preview. Pelo celular, mande o prompt da
 ## Fase 3 — Preços, Sobre, Brand, Contato, Jurídico
 - [ ] `/pricing/` lendo `plans.yaml`, toggle mensal/anual, selo "Early access", FAQ de cobrança
 - [ ] `/about/`, `/contact/` (+ `/api/contact`), `/brand/` com download do kit
-- [ ] Páginas legais com texto base marcado "DRAFT — legal review required"
-- [ ] Banner/preferências de cookies só se algum script exigir
+- [x] Páginas legais com texto base (aviso "em revisão jurídica" na página)
+- [x] Banner/preferências de cookies (GA4 com consentimento)
 
 **Prompt:**
 > Execute a Fase 3 do ROADMAP. Os valores de preço ficam em plans.yaml com placeholders que eu vou definir; me pergunte os valores no fim.

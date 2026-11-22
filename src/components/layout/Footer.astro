@@ -2,9 +2,11 @@
 import Logo from '@/components/brand/Logo.astro';
 import LocaleLinks from './LocaleLinks.astro';
 import ThemeToggle from './ThemeToggle.astro';
+import TrustBar from './TrustBar.astro';
 import { footerNav } from '@/config/nav';
 import type { Locale, RouteId } from '@/config/routes';
 import { site } from '@/config/site';
+import { consentCopy } from '@/content/consent';
 import { useTranslations } from '@/i18n/utils';
 
 interface Props {
@@ -21,6 +23,7 @@ const link =
 
 <footer class="border-t border-cr-rule bg-cr-surface">
   <div class="container-cr py-12">
+    <TrustBar locale={locale} />
     <div class="grid gap-10 lg:grid-cols-[1fr_3fr]">
       <div>
         <a href={href('home')} aria-label={t('a11y.home')} class="inline-flex">
@@ -80,9 +83,18 @@ const link =
         </ul>
       )}
 
-      <p class="text-cr-caption text-cr-muted">
-        © {year} {site.name}. {t('footer.rights')}
-      </p>
+      <div class="flex flex-wrap items-center gap-x-6 gap-y-2">
+        <button
+          type="button"
+          class={link + ' cursor-pointer bg-transparent p-0 text-cr-caption'}
+          data-cc="open"
+        >
+          {consentCopy[locale].footerLink}
+        </button>
+        <p class="text-cr-caption text-cr-muted">
+          © {year} {site.name}. {t('footer.rights')}
+        </p>
+      </div>
     </div>
   </div>
 </footer>
