@@ -9,8 +9,16 @@ export const site = {
   appUrl: env.PUBLIC_APP_URL || 'https://app.rushclippy.com',
   /** false = CTAs go to the waitlist; true = CTAs go to the app. */
   appLive: env.PUBLIC_APP_LIVE === 'true',
-  /** Windows beta installer (public GitHub release). Empty = the beta block is not rendered. */
-  downloadUrl: env.PUBLIC_DOWNLOAD_URL || '',
+  /**
+   * Windows apps. Each card reads the app's signed update channel to show the current version and
+   * link the newest installer, so a new release shows up here without redeploying the site.
+   * Without JavaScript (or if a channel is down) the button falls back to the releases page.
+   */
+  downloads: {
+    releasesUrl: env.PUBLIC_RELEASES_URL || 'https://github.com/Zymble/rushclippy-releases/releases',
+    studioFeed: env.PUBLIC_STUDIO_FEED || 'https://rushclippy-app.vercel.app/studio/updates/latest.json',
+    clipperFeed: env.PUBLIC_CLIPPER_FEED || 'https://rushclippy-app.vercel.app/clipper/updates/latest.json',
+  },
   plausibleDomain: env.PUBLIC_PLAUSIBLE_DOMAIN || '',
   /** Only a production deploy on Vercel may be indexed. */
   indexable: process.env.VERCEL_ENV === 'production',
