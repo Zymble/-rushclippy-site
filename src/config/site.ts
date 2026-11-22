@@ -15,9 +15,12 @@ export const site = {
    * Without JavaScript (or if a channel is down) the button falls back to the releases page.
    */
   downloads: {
-    releasesUrl: env.PUBLIC_RELEASES_URL || 'https://github.com/Zymble/rushclippy-releases/releases',
-    studioFeed: env.PUBLIC_STUDIO_FEED || 'https://rushclippy-app.vercel.app/studio/updates/latest.json',
-    clipperFeed: env.PUBLIC_CLIPPER_FEED || 'https://rushclippy-app.vercel.app/clipper/updates/latest.json',
+    releasesUrl:
+      env.PUBLIC_RELEASES_URL || 'https://github.com/Zymble/rushclippy-releases/releases',
+    studioFeed:
+      env.PUBLIC_STUDIO_FEED || 'https://rushclippy-app.vercel.app/studio/updates/latest.json',
+    clipperFeed:
+      env.PUBLIC_CLIPPER_FEED || 'https://rushclippy-app.vercel.app/clipper/updates/latest.json',
   },
   plausibleDomain: env.PUBLIC_PLAUSIBLE_DOMAIN || '',
   /** Only a production deploy on Vercel may be indexed. */

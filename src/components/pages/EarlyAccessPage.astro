@@ -63,7 +63,12 @@ const apps = [
             <h3 class="text-lg font-semibold">{a.copy.name}</h3>
             <p class="mt-2 text-sm text-cr-muted">{a.copy.body}</p>
             <p class="mt-3 text-sm font-semibold tabular-nums" data-app-version hidden></p>
-            <a class="cr-btn mt-4 inline-flex self-start" href={site.downloads.releasesUrl} rel="noopener" data-app-download>
+            <a
+              class="cr-btn mt-4 inline-flex self-start"
+              href={site.downloads.releasesUrl}
+              rel="noopener"
+              data-app-download
+            >
               {a.copy.cta}
             </a>
           </div>
@@ -107,7 +112,10 @@ const apps = [
       version.textContent = (card.dataset.versionLabel || '{v}').replace('{v}', body.version);
       version.hidden = false;
       const file = body.installer && body.installer.file;
-      if (typeof file === 'string' && file.startsWith('https://github.com/Zymble/rushclippy-releases/')) {
+      if (
+        typeof file === 'string' &&
+        file.startsWith('https://github.com/Zymble/rushclippy-releases/')
+      ) {
         card.querySelector<HTMLAnchorElement>('[data-app-download]')!.href = file;
       }
     } catch {
