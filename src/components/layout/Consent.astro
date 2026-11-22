@@ -229,15 +229,21 @@ const c = consentCopy[locale];
     if (t && stored()?.analytics) w.gtag('event', t.dataset.track);
   });
 
-  const choice = stored();
-  if (choice) {
-    if (choice.analytics) {
-      recordOrigin();
-      loadAnalytics();
+  // The banner is already painted by the <head> script; the rest waits for an idle moment so it
+  // never competes with the page's own first work (Lighthouse TBT/CLS).
+  const init = () => {
+    const choice = stored();
+    if (choice) {
+      if (choice.analytics) {
+        recordOrigin();
+        loadAnalytics();
+      }
+    } else {
+      document.documentElement.classList.add('cc-open');
     }
-  } else {
-    document.documentElement.classList.add('cc-open');
-  }
+  };
+  if ('requestIdleCallback' in window) requestIdleCallback(init, { timeout: 3000 });
+  else setTimeout(init, 1500);
 </script>
 
 <style>
