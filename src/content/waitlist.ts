@@ -35,8 +35,16 @@ export interface WaitlistCopy {
     points: string[];
     invalid: string;
     error: string;
-    /** Shown only when PUBLIC_DOWNLOAD_URL is set (Windows beta installer). */
-    beta: { title: string; body: string; cta: string; note: string };
+    /** Windows apps block: one card per app, version read from its update channel. */
+    beta: {
+      title: string;
+      body: string;
+      note: string;
+      /** "{v}" is replaced by the version number. */
+      version: string;
+      studio: { name: string; body: string; cta: string };
+      clipper: { name: string; body: string; cta: string };
+    };
   };
   confirmed: { title: string; body: string; streamer: string; clipper: string };
   email: { subject: string; heading: string; body: string; button: string; ignore: string };
@@ -94,9 +102,19 @@ export const waitlistCopy: Record<Locale, WaitlistCopy> = {
       error: 'We couldn’t confirm your spot right now. Try the link again in a few minutes.',
       beta: {
         title: 'Try the Windows beta now',
-        body: 'Don’t want to wait? Install the beta on your PC: it finds the best moments in your stream and cuts them vertical with captions. Everything runs on your computer.',
-        cta: 'Download for Windows',
+        body: 'Don’t want to wait? Pick the app for how you work. Both run on your PC and update themselves.',
         note: 'Windows 10 or 11, 64-bit. Free during the beta. Windows may warn about an unknown publisher: click “More info”, then “Run anyway”.',
+        version: 'Version {v}',
+        studio: {
+          name: 'RushClippy Studio',
+          body: 'For streamers. Record your stream on your graphics card, mark moments with F9 and cut the recording when you’re done. Also cuts YouTube links and video files.',
+          cta: 'Download Studio',
+        },
+        clipper: {
+          name: 'RushClippy Clipper',
+          body: 'For clippers. Paste a stream link, get vertical cuts with captions, edit them and post to TikTok.',
+          cta: 'Download Clipper',
+        },
       },
     },
     confirmed: {
@@ -165,9 +183,19 @@ export const waitlistCopy: Record<Locale, WaitlistCopy> = {
       error: 'Não deu pra confirmar seu lugar agora. Tenta o link de novo em alguns minutos.',
       beta: {
         title: 'Testa o beta no Windows agora',
-        body: 'Não quer esperar? Instala o beta no seu PC: ele acha os melhores momentos da live e corta na vertical, com legenda. Tudo roda no seu computador.',
-        cta: 'Baixar para Windows',
+        body: 'Não quer esperar? Escolhe o app do teu jeito de trabalhar. Os dois rodam no teu PC e se atualizam sozinhos.',
         note: 'Windows 10 ou 11, 64 bits. Grátis durante o beta. O Windows pode avisar que o editor é desconhecido: clica em “Mais informações” e depois em “Executar assim mesmo”.',
+        version: 'Versão {v}',
+        studio: {
+          name: 'RushClippy Studio',
+          body: 'Pra quem faz live. Grava a live com a placa de vídeo, marca os momentos com F9 e corta a gravação no fim. Também corta links do YouTube e vídeos do PC.',
+          cta: 'Baixar o Studio',
+        },
+        clipper: {
+          name: 'RushClippy Clipper',
+          body: 'Pra quem clipa. Cola o link da live, pega os cortes em pé com legenda, edita e posta no TikTok.',
+          cta: 'Baixar o Clipper',
+        },
       },
     },
     confirmed: {
@@ -237,9 +265,19 @@ export const waitlistCopy: Record<Locale, WaitlistCopy> = {
       error: 'No pudimos confirmar tu lugar ahora. Prueba el enlace de nuevo en unos minutos.',
       beta: {
         title: 'Prueba la beta para Windows ahora',
-        body: '¿No quieres esperar? Instala la beta en tu PC: encuentra los mejores momentos de tu stream y los corta en vertical, con subtítulos. Todo se ejecuta en tu computadora.',
-        cta: 'Descargar para Windows',
+        body: '¿No quieres esperar? Elige la app según cómo trabajas. Las dos se ejecutan en tu PC y se actualizan solas.',
         note: 'Windows 10 u 11, 64 bits. Gratis durante la beta. Windows puede avisar que el editor es desconocido: haz clic en “Más información” y luego en “Ejecutar de todas formas”.',
+        version: 'Versión {v}',
+        studio: {
+          name: 'RushClippy Studio',
+          body: 'Para streamers. Graba tu stream con la tarjeta gráfica, marca momentos con F9 y corta la grabación al terminar. También corta enlaces de YouTube y videos de tu PC.',
+          cta: 'Descargar Studio',
+        },
+        clipper: {
+          name: 'RushClippy Clipper',
+          body: 'Para clippers. Pega el enlace del stream, recibe cortes verticales con subtítulos, edítalos y publícalos en TikTok.',
+          cta: 'Descargar Clipper',
+        },
       },
     },
     confirmed: {

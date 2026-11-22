@@ -14,6 +14,10 @@ interface Props {
 }
 const { locale } = Astro.props;
 const w = waitlistCopy[locale];
+const apps = [
+  { feed: site.downloads.studioFeed, copy: w.page.beta.studio },
+  { feed: site.downloads.clipperFeed, copy: w.page.beta.clipper },
+];
 ---
 
 <section class="container-cr grid gap-12 py-16 md:py-24 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-16">
@@ -41,21 +45,37 @@ const w = waitlistCopy[locale];
     <div class="rounded-cr-dialog border border-cr-rule bg-cr-surface p-5 md:p-8">
       <WaitlistForm locale={locale} id="ea" />
     </div>
-    {site.downloadUrl && (
-      <aside
-        class="ea-beta mt-6 rounded-cr-dialog border border-cr-rule p-5 md:p-8"
-        aria-labelledby="ea-beta-title"
-      >
-        <h2 id="ea-beta-title" class="text-xl font-semibold">
-          {w.page.beta.title}
-        </h2>
-        <p class="mt-2 text-cr-muted">{w.page.beta.body}</p>
-        <a class="cr-btn mt-5 inline-flex" href={site.downloadUrl} rel="noopener">
-          {w.page.beta.cta}
-        </a>
-        <p class="mt-3 text-sm text-cr-muted">{w.page.beta.note}</p>
-      </aside>
-    )}
+    <aside
+      class="ea-beta mt-6 rounded-cr-dialog border border-cr-rule p-5 md:p-8"
+      aria-labelledby="ea-beta-title"
+    >
+      <h2 id="ea-beta-title" class="text-xl font-semibold">
+        {w.page.beta.title}
+      </h2>
+      <p class="mt-2 text-cr-muted">{w.page.beta.body}</p>
+      <div class="mt-5 grid gap-4 md:grid-cols-2">
+        {apps.map((a) => (
+          <div
+            class="flex flex-col rounded-cr-dialog border border-cr-rule p-5"
+            data-app-feed={a.feed}
+            data-version-label={w.page.beta.version}
+          >
+            <h3 class="text-lg font-semibold">{a.copy.name}</h3>
+            <p class="mt-2 text-sm text-cr-muted">{a.copy.body}</p>
+            <p class="mt-3 text-sm font-semibold tabular-nums" data-app-version hidden></p>
+            <a
+              class="cr-btn mt-4 inline-flex self-start"
+              href={site.downloads.releasesUrl}
+              rel="noopener"
+              data-app-download
+            >
+              {a.copy.cta}
+            </a>
+          </div>
+        ))}
+      </div>
+      <p class="mt-4 text-sm text-cr-muted">{w.page.beta.note}</p>
+    </aside>
   </div>
 </section>
 
@@ -82,6 +102,27 @@ const w = waitlistCopy[locale];
 </style>
 
 <script>
+  // Version and installer come from each app's signed update channel (see site.downloads).
+  document.querySelectorAll<HTMLElement>('[data-app-feed]').forEach(async (card) => {
+    try {
+      const res = await fetch(card.dataset.appFeed!, { cache: 'no-store' });
+      if (!res.ok) return;
+      const body = JSON.parse((await res.json()).body);
+      const version = card.querySelector<HTMLElement>('[data-app-version]')!;
+      version.textContent = (card.dataset.versionLabel || '{v}').replace('{v}', body.version);
+      version.hidden = false;
+      const file = body.installer && body.installer.file;
+      if (
+        typeof file === 'string' &&
+        file.startsWith('https://github.com/Zymble/rushclippy-releases/')
+      ) {
+        card.querySelector<HTMLAnchorElement>('[data-app-download]')!.href = file;
+      }
+    } catch {
+      /* channel unreachable: keep the releases-page link */
+    }
+  });
+
   const key = location.hash.replace('#', '');
   document.querySelectorAll<HTMLElement>('[data-hash]').forEach((el) => {
     el.hidden = el.dataset.hash !== key;
