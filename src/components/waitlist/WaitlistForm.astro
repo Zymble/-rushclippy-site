@@ -318,13 +318,24 @@ const errorsJson = JSON.stringify(f.errors);
     const submitLabel = form.querySelector<HTMLElement>('[data-submit-label]')!;
     const idleLabel = submitLabel.textContent ?? '';
 
-    // Carry UTM parameters with the signup.
+    // Carry where the visitor came from: the first-visit origin cookie (set only with analytics
+    // consent, see Consent.astro), else the UTM tags on this page.
     const params = new URLSearchParams(location.search);
     const utm = ['utm_source', 'utm_medium', 'utm_campaign']
       .map((k) => (params.get(k) ? `${k}=${params.get(k)}` : ''))
       .filter(Boolean)
       .join('&');
-    (form.elements.namedItem('utm') as HTMLInputElement).value = utm;
+    const setOrigin = () => {
+      const origin = document.cookie
+        .split('; ')
+        .find((r) => r.startsWith('cr_src='))
+        ?.slice('cr_src='.length);
+      (form.elements.namedItem('utm') as HTMLInputElement).value = origin
+        ? decodeURIComponent(origin)
+        : utm;
+    };
+    setOrigin();
+    document.addEventListener('cr:consent', setOrigin);
 
     // #streamer / #clipper preselects the side; the platform label follows it.
     const radios = form.querySelectorAll<HTMLInputElement>('input[name=profile][type=radio]');

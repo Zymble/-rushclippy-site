@@ -1,6 +1,6 @@
 ---
 /**
- * /early-access/ — generic signup (side chosen in the form; #streamer / #clipper preselect it).
+ * /early-access/: generic signup (side chosen in the form; #streamer / #clipper preselect it).
  * Also shows results of non-JS posts and confirmation links via the URL hash:
  * #sent (email sent), #invalid (bad/expired link), #error (provider failed).
  */
@@ -15,8 +15,8 @@ interface Props {
 const { locale } = Astro.props;
 const w = waitlistCopy[locale];
 const apps = [
-  { feed: site.downloads.studioFeed, copy: w.page.beta.studio },
-  { feed: site.downloads.clipperFeed, copy: w.page.beta.clipper },
+  { key: 'studio', feed: site.downloads.studioFeed, copy: w.page.beta.studio },
+  { key: 'clipper', feed: site.downloads.clipperFeed, copy: w.page.beta.clipper },
 ];
 ---
 
@@ -68,6 +68,7 @@ const apps = [
               href={site.downloads.releasesUrl}
               rel="noopener"
               data-app-download
+              data-track={`download_${a.key}`}
             >
               {a.copy.cta}
             </a>

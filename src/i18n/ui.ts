@@ -2,11 +2,11 @@ import type { Locale, RouteId } from '../config/routes';
 
 /**
  * Interface strings. English is the source; pt-br is reviewed;
- * es entries are machine-quality drafts — TODO review by a native translator.
+ * es entries are machine-quality drafts: TODO review by a native translator.
  */
 export const ui = {
   en: {
-    'meta.home.title': 'RushClippy — Your stream. Your cut.',
+    'meta.home.title': 'RushClippy | Your stream. Your cut.',
     'meta.home.description':
       'RushClippy finds the moments in your stream worth a clip. You decide where it starts, where it ends and which version goes live.',
     'a11y.skip': 'Skip to content',
@@ -45,12 +45,12 @@ export const ui = {
     'home.title': 'Your stream. Your cut.',
     'home.lead':
       'RushClippy finds the moments in your stream worth a clip. You decide where it starts, where it ends and which version goes live.',
-    'home.note': 'Early access — the app is not live yet.',
+    'home.note': 'Early access: the app is not live yet.',
     'notFound.title': 'This page isn’t in the cut.',
     'notFound.body': 'The link may be old or mistyped.',
   },
   'pt-br': {
-    'meta.home.title': 'RushClippy — Your stream. Your cut.',
+    'meta.home.title': 'RushClippy | Your stream. Your cut.',
     'meta.home.description':
       'A RushClippy encontra os trechos da sua live que valem um corte. Você decide o começo, o fim e a versão que vai ao ar.',
     'a11y.skip': 'Pular para o conteúdo',
@@ -89,13 +89,13 @@ export const ui = {
     'home.title': 'Your stream. Your cut.',
     'home.lead':
       'A RushClippy encontra os trechos da sua live que valem um corte. Você decide o começo, o fim e a versão que vai ao ar.',
-    'home.note': 'Acesso antecipado — o app ainda não foi lançado.',
+    'home.note': 'Acesso antecipado: o app ainda não foi lançado.',
     'notFound.title': 'Esta página ficou fora do corte.',
     'notFound.body': 'O link pode estar antigo ou com erro de digitação.',
   },
   // TODO review: Spanish strings need a native translator pass.
   es: {
-    'meta.home.title': 'RushClippy — Your stream. Your cut.',
+    'meta.home.title': 'RushClippy | Your stream. Your cut.',
     'meta.home.description':
       'RushClippy encuentra los momentos de tu stream que valen un clip. Tú decides dónde empieza, dónde termina y qué versión se publica.',
     'a11y.skip': 'Saltar al contenido',

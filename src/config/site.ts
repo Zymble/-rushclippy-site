@@ -22,7 +22,13 @@ export const site = {
     clipperFeed:
       env.PUBLIC_CLIPPER_FEED || 'https://rushclippy-app.vercel.app/clipper/updates/latest.json',
   },
-  plausibleDomain: env.PUBLIC_PLAUSIBLE_DOMAIN || '',
+  /** Google Analytics 4 measurement ID (G-XXXXXXX). Loaded only after the visitor accepts analytics cookies. */
+  gaId: env.PUBLIC_GA_ID || '',
+  /** Data controller shown in the legal pages, and the inbox for privacy requests (LGPD/GDPR). */
+  controller: env.PUBLIC_LEGAL_NAME || 'RushClippy',
+  privacyEmail: env.PUBLIC_PRIVACY_EMAIL || '',
+  /** Date the legal texts last changed (ISO). Bump it whenever a legal page changes. */
+  legalUpdated: '2026-11-22',
   /** Only a production deploy on Vercel may be indexed. */
   indexable: process.env.VERCEL_ENV === 'production',
   /**

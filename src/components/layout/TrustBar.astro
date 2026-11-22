@@ -1,0 +1,122 @@
+---
+/**
+ * Trust facts shown in the footer. Only things that are verifiably true of the product today:
+ * no certifications, no third-party seals we do not hold (see the honesty rules in CLAUDE.md).
+ * If a fact stops being true (e.g. videos start going to the cloud), remove or rewrite it.
+ */
+import Icon from './Icon.astro';
+import { localizedPath, type Locale } from '@/config/routes';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+
+const copy = {
+  en: {
+    label: 'How we protect you',
+    items: [
+      { icon: 'lock', t: 'Secure connection', d: 'Every page uses HTTPS encryption.' },
+      {
+        icon: 'monitor',
+        t: 'Your videos stay on your PC',
+        d: 'The apps don’t upload your videos to our servers.',
+      },
+      {
+        icon: 'shield',
+        t: 'Signed app updates',
+        d: 'The apps refuse any update without our digital signature.',
+      },
+      {
+        icon: 'user-check',
+        t: 'Your data, your rights',
+        d: 'GDPR and LGPD requests answered within 15 days.',
+        link: 'Privacy policy',
+      },
+    ],
+  },
+  'pt-br': {
+    label: 'Como a gente te protege',
+    items: [
+      { icon: 'lock', t: 'Conexão segura', d: 'Todas as páginas usam criptografia HTTPS.' },
+      {
+        icon: 'monitor',
+        t: 'Teus vídeos ficam no teu PC',
+        d: 'Os apps não enviam teus vídeos pros nossos servidores.',
+      },
+      {
+        icon: 'shield',
+        t: 'Atualizações assinadas',
+        d: 'Os apps recusam qualquer atualização sem a nossa assinatura digital.',
+      },
+      {
+        icon: 'user-check',
+        t: 'Teus dados, teus direitos',
+        d: 'Pedidos pela LGPD respondidos em até 15 dias.',
+        link: 'Política de privacidade',
+      },
+    ],
+  },
+  es: {
+    label: 'Cómo te protegemos',
+    items: [
+      { icon: 'lock', t: 'Conexión segura', d: 'Todas las páginas usan cifrado HTTPS.' },
+      {
+        icon: 'monitor',
+        t: 'Tus videos se quedan en tu PC',
+        d: 'Las apps no suben tus videos a nuestros servidores.',
+      },
+      {
+        icon: 'shield',
+        t: 'Actualizaciones firmadas',
+        d: 'Las apps rechazan cualquier actualización sin nuestra firma digital.',
+      },
+      {
+        icon: 'user-check',
+        t: 'Tus datos, tus derechos',
+        d: 'Solicitudes por RGPD y LGPD respondidas en 15 días.',
+        link: 'Política de privacidad',
+      },
+    ],
+  },
+}[locale];
+---
+
+<section aria-labelledby="trust-title" class="mb-12 border-b border-cr-rule pb-10">
+  <h2 id="trust-title" class="text-cr-label text-cr-text">
+    {copy.label}
+  </h2>
+  <ul class="mt-5 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+    {copy.items.map((it) => (
+      <li class="flex gap-3">
+        <span class="tb-ico">
+          <Icon name={it.icon as 'lock'} size={18} />
+        </span>
+        <span>
+          <span class="block font-semibold text-cr-text">{it.t}</span>
+          <span class="mt-1 block text-sm text-cr-muted">
+            {it.d}{' '}
+            {it.link && (
+              <a href={localizedPath('legal/privacy', locale)} class="text-cr-text underline">
+                {it.link}
+              </a>
+            )}
+          </span>
+        </span>
+      </li>
+    ))}
+  </ul>
+</section>
+
+<style>
+  .tb-ico {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: var(--cr-radius-control);
+    border: 1px solid var(--cr-rule);
+    color: var(--cr-text);
+  }
+</style>

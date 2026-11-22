@@ -53,6 +53,8 @@ test('placeholder pages are noindex', async ({ page }) => {
 
 test('theme choice persists across navigation', async ({ page }) => {
   await page.goto('/');
+  // Answer the cookie banner first, like a visitor would (it sits over the footer).
+  await page.locator('#cr-consent [data-cc="reject"]').click();
   const before = await page.locator('html').getAttribute('data-theme');
   const target = before === 'dark' ? 'light' : 'dark';
   await page.locator(`footer [data-theme-set="${target}"]`).click();
@@ -100,4 +102,25 @@ test('streamer page leads with the small-budget hook', async ({ page }) => {
   await page.goto('/pt-br/streamers/');
   await expect(page.locator('h1')).toContainText('R$ 100');
   await expect(page.locator('.app').first()).toBeVisible();
+});
+
+test('cookie banner: essential only by default, analytics only after opt-in', async ({ page }) => {
+  await page.goto('/pt-br/?utm_source=tiktok&utm_medium=social');
+  const banner = page.locator('#cr-consent');
+  await expect(banner).toBeVisible();
+  await banner.locator('[data-cc="reject"]').click();
+  await expect(banner).toBeHidden();
+  let cookies = await page.context().cookies();
+  expect(cookies.find((c) => c.name === 'cr_consent')?.value).toBe('v1.a0');
+  expect(cookies.find((c) => c.name === 'cr_src')).toBeUndefined();
+
+  // Footer link reopens the choice; turning analytics on records the visit origin.
+  await page.locator('footer [data-cc="open"]').click();
+  await page.locator('#cc-analytics').check();
+  await page.locator('#cr-consent-dialog [data-cc="save"]').click();
+  cookies = await page.context().cookies();
+  expect(cookies.find((c) => c.name === 'cr_consent')?.value).toBe('v1.a1');
+  expect(decodeURIComponent(cookies.find((c) => c.name === 'cr_src')?.value ?? '')).toContain(
+    'source=tiktok',
+  );
 });

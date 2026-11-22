@@ -11,6 +11,7 @@ import ClipperPage from '@/components/pages/ClipperPage.astro';
 import ConfirmedPage from '@/components/pages/ConfirmedPage.astro';
 import EarlyAccessPage from '@/components/pages/EarlyAccessPage.astro';
 import HomePage from '@/components/pages/HomePage.astro';
+import LegalPage from '@/components/pages/LegalPage.astro';
 import StreamerPage from '@/components/pages/StreamerPage.astro';
 import {
   defaultLocale,
@@ -23,6 +24,7 @@ import {
 import { homeCopy } from '@/content/home';
 import { clipperCopy, streamerCopy } from '@/content/landings';
 import { waitlistCopy } from '@/content/waitlist';
+import { legalDocs, type LegalId } from '@/content/legal';
 import { useTranslations } from '@/i18n/utils';
 
 export function getStaticPaths() {
@@ -48,15 +50,22 @@ const meta: Partial<Record<RouteId, { title: string; description: string }>> = {
   streamers: streamerCopy[locale].meta,
   clippers: clipperCopy[locale].meta,
   'early-access': {
-    title: `${waitlistCopy[locale].page.title} — RushClippy`,
+    title: `${waitlistCopy[locale].page.title} | RushClippy`,
     description: waitlistCopy[locale].page.lead,
   },
   'early-access/confirmed': {
-    title: `${waitlistCopy[locale].confirmed.title} — RushClippy`,
+    title: `${waitlistCopy[locale].confirmed.title} | RushClippy`,
     description: waitlistCopy[locale].confirmed.body,
   },
 };
-const title = meta[id]?.title ?? `${page(id)} — RushClippy`;
+const legalId = (id in legalDocs ? id : null) as LegalId | null;
+if (legalId) {
+  meta[id] = {
+    title: `${legalDocs[legalId][locale].title} | RushClippy`,
+    description: legalDocs[legalId][locale].description,
+  };
+}
+const title = meta[id]?.title ?? `${page(id)} | RushClippy`;
 const description = meta[id]?.description ?? t('soon.body');
 ---
 
@@ -77,6 +86,8 @@ const description = meta[id]?.description ?? t('soon.body');
     <EarlyAccessPage locale={locale} />
   ) : id === 'early-access/confirmed' ? (
     <ConfirmedPage locale={locale} />
+  ) : legalId ? (
+    <LegalPage locale={locale} id={legalId} />
   ) : (
     <ComingSoon locale={locale} routeId={id} />
   )}

@@ -50,7 +50,7 @@ export interface ClipperCopy {
 export const streamerCopy: Record<Locale, StreamerCopy> = {
   en: {
     meta: {
-      title: 'Clippers from $30 — RushClippy',
+      title: 'Clippers from $30 | RushClippy',
       description:
         'Set a prize, run clip contests and see who’s clipping your stream, live. Nothing goes out under your name without your rules.',
     },
@@ -143,7 +143,7 @@ export const streamerCopy: Record<Locale, StreamerCopy> = {
 
   'pt-br': {
     meta: {
-      title: 'Tem R$ 100? Clipadores postam sua live — RushClippy',
+      title: 'Tem R$ 100? Clipadores postam sua live | RushClippy',
       description:
         'Ponha prêmio, abra campeonato de cortes e veja quem está clipando sua live, ao vivo. Nada sai com seu nome sem as suas regras.',
     },
@@ -236,7 +236,7 @@ export const streamerCopy: Record<Locale, StreamerCopy> = {
   // TODO review: native Spanish (LatAm neutral) pass before launch.
   es: {
     meta: {
-      title: '¿Tienes US$20? Clippers publican tu stream — RushClippy',
+      title: '¿Tienes US$20? Clippers publican tu stream | RushClippy',
       description:
         'Pon un premio, abre torneos de clips y mira quién clipea tu stream, en vivo. Nada sale con tu nombre sin tus reglas.',
     },
@@ -330,7 +330,7 @@ export const streamerCopy: Record<Locale, StreamerCopy> = {
 export const clipperCopy: Record<Locale, ClipperCopy> = {
   en: {
     meta: {
-      title: 'Clip streams live and compete for prizes — RushClippy',
+      title: 'Clip streams live and compete for prizes | RushClippy',
       description:
         'The AI flags plays live. You post, earn per view or approved clip and compete in contests streamers run. Results vary.',
     },
@@ -380,7 +380,7 @@ export const clipperCopy: Record<Locale, ClipperCopy> = {
 
   'pt-br': {
     meta: {
-      title: 'Clipe lives de canais gringos e receba em dólar — RushClippy',
+      title: 'Clipe lives de canais gringos e receba em dólar | RushClippy',
       description:
         'A IA marca os lances ao vivo. Você posta, ganha por mil views ou por corte aprovado e disputa campeonatos dos streamers. Os resultados variam.',
     },
@@ -438,7 +438,7 @@ export const clipperCopy: Record<Locale, ClipperCopy> = {
   // TODO review: native Spanish (LatAm neutral) pass before launch.
   es: {
     meta: {
-      title: 'Clipea streams de canales de fuera y cobra en dólares — RushClippy',
+      title: 'Clipea streams de canales de fuera y cobra en dólares | RushClippy',
       description:
         'La IA marca las jugadas en vivo. Publicas, ganas por mil views o por clip aprobado y compites en torneos de streamers. Los resultados varían.',
     },

@@ -52,7 +52,16 @@ export type RouteId = (typeof routeIds)[number];
 /** live = real page, indexable · hidden = real page, noindex, not in sitemap · soon = placeholder. */
 export type RouteStatus = 'live' | 'hidden' | 'soon';
 
-const liveRoutes: RouteId[] = ['home', 'streamers', 'clippers', 'early-access'];
+const liveRoutes: RouteId[] = [
+  'home',
+  'streamers',
+  'clippers',
+  'early-access',
+  'legal/privacy',
+  'legal/cookies',
+  'legal/terms',
+  'legal/acceptable-use',
+];
 const hiddenRoutes: RouteId[] = ['early-access/confirmed'];
 
 /** Flip a route to 'live' when its page ships. */
